@@ -16,7 +16,7 @@ class RetryTimesError(BaseError):
 class RetryMaxTimesError(BaseError):
     message = '超过最大重试次数!!!'
 
-    def __init__(self, max_times, func_name, error_message):
+    def __init__(self, max_times: int, func_name: str, error_message: str):
         self.message = 'Try {} times {} but {}'.format(
             max_times, func_name, error_message)
         super(RetryMaxTimesError, self).__init__(self.message)

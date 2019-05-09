@@ -5,14 +5,14 @@ import random
 import time
 import hashlib
 import pickle
-
+from typing import Dict
 from framework.Error import RetryTimesError, RetryMaxTimesError
 cache_map = {}  # 内存缓存
 
 BASE_TYPE_LIST = (int, str, bool, tuple, float)
 
 
-def retry(times=10, interval=2):
+def retry(times: int = 10, interval: float = 2):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -32,7 +32,7 @@ def retry(times=10, interval=2):
     return decorator
 
 
-def add_log(name):
+def add_log(name: str):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -50,7 +50,7 @@ def add_log(name):
     return decorator
 
 
-def cache(duration=3600):
+def cache(duration: float = 3600):
     # duration < 0, 永不过期
     def decorator(func):
         @functools.wraps(func)
@@ -79,12 +79,12 @@ def cache(duration=3600):
     return decorator
 
 
-def is_obsolete(entry, duration):
+def is_obsolete(entry, duration: float) -> bool:
     if duration < 0:
         return False
     return time.time() - entry['time'] > duration
 
 
-def compute_key(func, args, kw):
+def compute_key(func, args, kw) -> str:
     key = pickle.dumps((func.__name__, args, kw))
     return hashlib.sha1(key).hexdigest()
